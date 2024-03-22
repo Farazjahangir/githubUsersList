@@ -93,7 +93,6 @@ const Users = () => {
          setNextPage(nextPage + 1)
         }
         if (!searchOn.isOn && sinceId) {
-          console.log("IFFFF");
           fetchAllUsers();
         }
       }
@@ -128,7 +127,7 @@ const Users = () => {
         <div className={styles.userBox}>
           {!!users.length ? (
             users.map((item) => (
-              <div className={styles.mt20}>
+              <div className={styles.mt20} key={item.id}>
                 <ListBox
                   onNameClick={() => toggleModal(item.login)}
                   data={{

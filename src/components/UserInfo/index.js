@@ -12,7 +12,6 @@ const UserInfo = ({ isOpen, onRequestClose, loginName }) => {
   const fetchUser = async () => {
    try {
     const res = await getUser(loginName)
-    console.log("RES", res)
     setData(res.data)
    } catch(e) {
     console.log("ERR", e?.response?.data?.message)
