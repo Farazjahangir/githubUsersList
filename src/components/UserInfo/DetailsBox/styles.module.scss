@@ -1,0 +1,17 @@
+@import "../../../constants/colors.scss";
+
+.container {
+    display: flex;
+    border: 1px solid $border;
+    padding: 10px;
+    margin: 15px 0;
+    background-color: $lightGrey;
+}
+
+.text {
+    font-size: 18px;
+}
+
+.orangeText {
+    color: $orangeText;
+}

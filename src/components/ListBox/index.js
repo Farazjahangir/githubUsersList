@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "./style.module.scss";
 
-const ListBox = () => {
+const ListBox = ({onNameClick}) => {
   return (
     <div className={styles.container}>
       <img
@@ -10,7 +10,7 @@ const ListBox = () => {
         className={styles.userPicture}
       />
       <div className={styles.detailsBox}>
-        <p className={styles.name}>Faraz Jahangir</p>
+        <p className={styles.name} onClick={onNameClick}>Faraz Jahangir</p>
         <a
           href="https://github.com/Farazjahangir/githubUsersList"
           target="_blank"

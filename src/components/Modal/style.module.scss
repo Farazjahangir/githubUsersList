@@ -1,0 +1,32 @@
+@import "../../constants/colors.scss";
+
+.modal {
+    background-color: $white;
+    position: fixed;
+    margin: auto auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 500px;
+    outline: none;
+    padding: 20px
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $modalBackdrop;
+}
+
+.closeIconBox {
+    text-align: end;
+}
+
+.closeIcon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
