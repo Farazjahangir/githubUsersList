@@ -1,7 +1,9 @@
 import axiosReq from "../config/axios";
 
-const getAllUsers = () => {
-    return axiosReq.get('users')
+const getAllUsers = (params={}) => {
+    return axiosReq.get('users', {
+        params
+    })
 }
 
 const searchUsers = (params) => {
