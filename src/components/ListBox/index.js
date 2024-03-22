@@ -2,21 +2,22 @@ import React from "react";
 
 import styles from "./style.module.scss";
 
-const ListBox = ({onNameClick}) => {
+const ListBox = ({onNameClick, data}) => {
   return (
     <div className={styles.container}>
       <img
-        src="https://avatars.githubusercontent.com/u/38138258?v=4"
+        src={data.pic}
+        alt="User Picture"
         className={styles.userPicture}
       />
       <div className={styles.detailsBox}>
-        <p className={styles.name} onClick={onNameClick}>Faraz Jahangir</p>
+        <p className={styles.name} onClick={onNameClick}>{data.username}</p>
         <a
-          href="https://github.com/Farazjahangir/githubUsersList"
+          href={data.profileUrl}
           target="_blank"
           className={styles.url}
         >
-          https://github.com/Farazjahangir/githubUsersList
+         {data.profileUrl}
         </a>
       </div>
     </div>
