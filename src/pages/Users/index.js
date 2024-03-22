@@ -5,7 +5,7 @@ import Input from "../../components/Input/input";
 import ListBox from "../../components/ListBox";
 import UserInfo from "../../components/UserInfo";
 import { getAllUsers, searchUsers } from "../../utils/api";
-import { REQ_CALL_TIMEOUT } from "../../constants";
+import { REQ_CALL_TIMEOUT, PER_PAGE } from "../../constants";
 import styles from "./style.module.scss";
 
 const Users = () => {
@@ -14,9 +14,13 @@ const Users = () => {
     loginName: null,
   });
   const [users, setUsers] = useState([]);
-  const [nextPage, setNextPage] = useState(null);
-  const [searchOn, setSearchOn] = useState(false);
-  const [sinceId, setSinceId] = useState(null);
+  const [nextPage, setNextPage] = useState(1);
+  const [searchOn, setSearchOn] = useState({
+    isOn: false,
+    totalPages: 0,
+  });
+  const [sinceId, setSinceId] = useState(0);
+  const [searchText, setSearchText] = useState("");
 
   const toggleModal = (loginName) => {
     setModalObj({
@@ -27,57 +31,73 @@ const Users = () => {
 
   const fetchAllUsers = async () => {
     try {
-      const res = await getAllUsers({ since: sinceId || 0 });
-      setUsers([...users, ...res.data]);
-      let lastId = null
+      if (nextPage !== 1) {
+        setNextPage(1)
+      }
+      const res = await getAllUsers({ since: sinceId });
+      let prevData = []
+      if (sinceId != 0) {
+        prevData = [...users]
+      }
+      setUsers([...prevData, ...res.data]);
+      setSearchOn({
+        isOn: false,
+        totalPages: 0,
+      });
+      let lastId = null;
       if (res?.data?.length) {
-        lastId = res.data[res.data.length - 1].id
-        setSinceId(lastId)
+        lastId = res.data[res.data.length - 1].id;
+        setSinceId(lastId);
       }
     } catch (e) {
       console.log("ERR", e?.response?.data?.message || e?.message);
     }
   };
 
-  const findUsers = (payload) => searchUsers(payload)
-
-  const onSearch = async (e) => {
+  const findUsers = async () => {
     try {
-      const value = e.target.value;
-      if (value) {
-        setSearchOn(true)
-        const payload = {
-          q: value
-        }
-        const res = await findUsers(payload);
-        setUsers(res.data.items);
-      } else {
-        setSearchOn(false)
-        fetchAllUsers();
+      if (sinceId !== 0) {
+        setSinceId(0)
       }
+      const payload = {
+        q: searchText,
+        page: nextPage,
+      };
+      const res = await searchUsers(payload);
+      let prevData = [...users];
+      if (nextPage === 1) {
+        prevData = []
+      }
+      setUsers([...prevData, ...res.data.items]);
+      setSearchOn({
+        isOn: true,
+        totalPages: Math.floor(res.data.total_count / PER_PAGE),
+      });
     } catch (e) {
       console.log("ERR", e?.response?.data?.message || e?.message);
     }
+  };
+
+  const onSearch = async (e) => {
+    const value = e?.target?.value;
+    setSearchText(value);
   };
 
   const onEndReached = (e) => {
     try {
       const endReached =
         e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-  
+
       if (endReached) {
-        // if (searchOn) {
-        //   const data = nextPage.split("?")
-        //   const params = 
-        //   console.log("Parmas", params[1].split('&'))
-        //   // findUsers()
-        // }
-         if (!searchOn && sinceId) {
-          console.log("IFFFF")
-          fetchAllUsers()
+        if (searchOn.isOn && nextPage !== searchOn.totalPages) {
+         setNextPage(nextPage + 1)
         }
-      } 
-    } catch(e) {
+        if (!searchOn.isOn && sinceId) {
+          console.log("IFFFF");
+          fetchAllUsers();
+        }
+      }
+    } catch (e) {
       console.log("ERR", e?.response?.data?.message || e?.message);
     }
   };
@@ -85,8 +105,13 @@ const Users = () => {
   const debouncedSearch = debounce(onSearch, REQ_CALL_TIMEOUT);
 
   useEffect(() => {
-    fetchAllUsers();
-  }, []);
+    if (nextPage !== searchOn.totalPages && searchText) {
+      findUsers();
+    }
+    if (!searchText) {
+      fetchAllUsers();
+    }
+  }, [nextPage, searchText]);
 
   return (
     <div className={styles.container} onScroll={onEndReached}>
