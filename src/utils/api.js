@@ -10,7 +10,12 @@ const searchUsers = (params) => {
     })
 }
 
+const getUser = (username) => {
+    return axiosReq.get(`users/${username}`)
+}
+
 export {
     getAllUsers,
-    searchUsers
+    searchUsers,
+    getUser
 }

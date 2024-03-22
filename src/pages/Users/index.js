@@ -9,12 +9,19 @@ import { REQ_CALL_TIMEOUT } from "../../constants";
 import styles from "./style.module.scss";
 
 const Users = () => {
-  const [modalIsOpen, setModalOpen] = useState(false);
+  const [modalObj, setModalObj] = useState({
+    open: false,
+    loginName: null
+  });
   const [users, setUsers] = useState([]);
   const [searchText, setSearchText] = useState('');
 
-  const toggleModal = () => {
-    setModalOpen(!modalIsOpen);
+  const toggleModal = (loginName) => {
+    setModalObj({
+      open: !modalObj.open,
+      loginName: !modalObj.open ? loginName : null
+    });
+
   };
 
   const fetchAllUsers = async () => {
@@ -49,7 +56,7 @@ const Users = () => {
 
   return (
     <div className={styles.container}>
-      <UserInfo isOpen={modalIsOpen} onRequestClose={toggleModal} />
+      <UserInfo isOpen={modalObj.open} onRequestClose={toggleModal} loginName={modalObj.loginName} />
       <div className={styles.dataBox}>
         <h2 className={styles.title}>Github Users</h2>
         <div className={styles.inputBox}>
@@ -60,7 +67,7 @@ const Users = () => {
             ? users.map((item) => (
                 <div className={styles.mt20}>
                   <ListBox
-                    onNameClick={toggleModal}
+                    onNameClick={() => toggleModal(item.login)}
                     data={{
                       pic: item.avatar_url,
                       profileUrl: item.html_url,
