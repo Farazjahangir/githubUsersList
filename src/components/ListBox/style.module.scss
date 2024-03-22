@@ -1,0 +1,26 @@
+@import "../../constants/colors.scss";
+
+.container {
+    border: 1px solid $border;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+    background-color: $white;
+    height: 85px;
+}
+
+.userPicture {
+    height: 100%;
+    // border-radius: 5px 
+}
+
+.detailsBox {
+    margin-left: 10px;
+}
+
+.name {
+    margin-bottom: 5px;
+    font-size: 18px;
+}
